@@ -20,12 +20,13 @@
 function GameObject(info) {
   this.createdAt = info.createdAt;
   this.dimensions = info.dimensions;
+  this.name=info.name;
 }
 
 GameObject.prototype.destroy = function () {
-  return `Object was removed from the game`;
+    return `${this.name} was removed from the game`;
 };
-GameObject.prototype = Object.create(CharacterStats.prototype);
+CharacterStats.prototype = Object.create(GameObject.prototype);
 
 /*
   === CharacterStats ===
@@ -38,13 +39,12 @@ GameObject.prototype = Object.create(CharacterStats.prototype);
 function CharacterStats(stats) {
   GameObject.call(this, stats);
   this.healthPoints = stats.healthPoints;
-  this.name = stats.name;
 }
 
 CharacterStats.prototype.takeDamage = function () {
   return `${this.name} took damage.`;
 };
-CharacterStats.prototype = Object.create(Humanoid.prototype)
+Humanoid.prototype = Object.create(CharacterStats.prototype)
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -56,16 +56,24 @@ CharacterStats.prototype = Object.create(Humanoid.prototype)
   * should inherit takeDamage() from CharacterStats
 */
 
+
+
 function Humanoid(atts) {
   CharacterStats.call(this, atts);
   this.team = atts.team;
-  this.weapons = atts.weapns;
+  this.weapons = atts.weapons;
   this.language = atts.language;
 }
 
 Humanoid.prototype.greet = function () {
   return `${this.name} offers a greeting in ${this.language}`;
 };
+
+
+
+// Humanoid.prototype = Object.create(Villain.prototype)
+// Humanoid.prototype = Object.create(Hero.prototype)
+
 
 /*
  * Inheritance chain: GameObject -> CharacterStats -> Humanoid
@@ -125,6 +133,42 @@ const archer = new Humanoid({
   language: 'Elvish',
 });
 
+const thePenguin = new Villain({
+  createdAt: new Date(),
+  dimensions: {
+    length: 1,
+    width: 5,
+    height: 1,
+  },
+  healthPoints: 100,
+  name: 'Penguin',
+  team: 'Weird Loner',
+  weapons: [
+    'Umbrella',
+    'Dynamite',
+  ],
+  language: 'English',
+})
+
+const Batman = new Hero({
+  createdAt: new Date(),
+  dimensions: {
+    length: 2,
+    width: 3,
+    height: 8,
+  },
+  healthPoints: 125,
+  name: 'Batman',
+  team: 'Gotham',
+  weapons: [
+    'Bow',
+    'Dagger',
+  ],
+  language: 'Elvish',
+})
+
+console.log(mage)
+
 console.log(mage.createdAt); // Today's date
 console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
 console.log(swordsman.healthPoints); // 15
@@ -141,6 +185,24 @@ console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
 // * Create two new objects, one a villain and one a hero and fight it out with methods!
 
-function Villain{
-  
+function Villain(weak){
+  Humanoid.call(this, weak);
 }
+
+Villain.prototype.strike = function(){
+  return Math.random(-2, -10), 1;
+}
+Villain.prototype = Object.create(Humanoid.prototype)
+
+
+function Hero(strong){
+  Humanoid.call(this, strong);
+}
+
+Hero.prototype.punch = function(){
+  return Math.random(-2, -10), 1;
+}
+
+Hero.prototype = Object.create(Humanoid.prototype)
+
+console.log(thePenguin);
